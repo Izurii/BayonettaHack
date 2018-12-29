@@ -2,26 +2,26 @@
 
 Just inject the dll and use the functions keys to active the cheats.
 
-F1 ~ 
+F1 ~ Unlimited Gold
 
-F2 ~ 
+F2 ~ Unlimited Health
 
-F3 ~ 
+F3 ~ Unlimited Witch Time
 
-F4 ~ 
+F4 ~ Unlimited Magic
 
-F5 ~ 
+F5 ~ One Hit Kill
 
-F6 ~ 
+F6 ~ Max Giga/Mega Ton
 
-F7 ~ 
+F7 ~ Infinite Jump
 
-F8 ~ 
+F8 ~ Max All Items (You need to have at least one item to max him <- This doesn't count the compounds needed to make the Lollipops etc)
 
-F9 ~ 
+F9 ~ Infinite Alfheim Life
 
-F10 ~ 
+F10 ~ Unlimited Alfheim Time
 
-F11 ~ 
+F11 ~ *.*-_-*.*
 
-F12 ~ 
+F12 ~ -_-*.*-_-
