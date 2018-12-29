@@ -1,4 +1,0 @@
-﻿  dllmain.cpp
-c:\users\izurii\documents\visual studio 2015\projects\bayonettahack\bayonettahack\dllmain.cpp(37): warning C4477: 'sprintf_s' : format string '%0x' requires an argument of type 'unsigned int', but variadic argument 1 has type 'void *'
-  BayonettaHack.vcxproj -> c:\users\izurii\documents\visual studio 2015\Projects\BayonettaHack\Debug\BayonettaHack.dll
-  BayonettaHack.vcxproj -> c:\users\izurii\documents\visual studio 2015\Projects\BayonettaHack\Debug\BayonettaHack.pdb (Full PDB)
