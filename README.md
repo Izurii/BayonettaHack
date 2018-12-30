@@ -2,7 +2,7 @@
 
 Just inject the dll and use the functions keys to active the cheats.
 
-F1 ~ Unlimited Gold
+F1 ~ Unlimited Gold (Working!!!)
 
 F2 ~ Unlimited Health
 
