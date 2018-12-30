@@ -1,5 +1,7 @@
 # BayonettaHack
 
+I'm using Visual Studio 2015 but almost work with Studio 2017. When calling the function "FindPattern" you need to put a cast to "char pointer" (char*) on the mask. Example: "FindPattern(startAddress, 6000, (PBYTE)"\x11\x22\x33\x44\x55", *(char*)*"xxxxxx");
+
 Just inject the dll and use the functions keys to active the cheats.
 
 F1 ~ Unlimited Gold (Now working!!!)
