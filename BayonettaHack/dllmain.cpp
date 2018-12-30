@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <sstream>
 #include <string>
+#include "Functions.h"
 
 using namespace std;
 
@@ -24,41 +25,74 @@ DWORD FindPattern(DWORD dwInicio, DWORD dwFim, BYTE *arrayBytes, CHAR mascara[])
 DWORD WINAPI inicializa(PVOID ini)
 {
 
+	//Actual h4ck3r codes
+	BYTE jmpInstruction[] = { 0xE9 };
+	BYTE nopInstruction[] = { 0x90 };
+	BYTE haloCheat[] = { 0x90 };
+
+	//Other things lol
+
+	HWND hwnd = FindWindowA(0, "Bayonetta");
+	DWORD processId;
+	GetWindowThreadProcessId(hwnd, &processId);
 	HANDLE p = GetCurrentProcess();
-	BYTE cheat[13] = { 0xC7, 0x46, 0x2C, 0x00, 0x00, 0xC8, 0x42, 0xF3, 0x0F, 0x58, 0x46, 0x2C, 0xE9 };
-	BYTE ori[] = { 0xE9 };
-	DWORD hp = FindPattern(0x004A8000, 6000, (PBYTE)"\xF3\x0F\x58\x46\x2C\x50", "xxxxxx");
-	void* alloc = VirtualAllocEx(p, NULL, sizeof(cheat) + 1, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
-	void * pa = alloc;
-	pa = static_cast<char*>(pa) + 0xD;
-	char t[1024];
-	sprintf_s(t, "%0x", alloc); 
+	unsigned int temp, buff;
+	
+
+	/*  Address || Pointers && Offsets (P.S: Variables for the final addresses) */
+
+	DWORD gameBaseAddress = getBaseAddress(processId, L"Bayonetta.exe");
+
+	//Halos
+	DWORD haloAddress = gameBaseAddress + 0x000291B4;
+	char haloOffset = { 0x14 };
+	unsigned int haloFinalAddress;
+	int haloMax = 9000000;
+
+	
+	//--------------------------------------------------------------------------------
+
+
+	/* Picking (the pointers || Final addresses) */
+
+	//Halos
+	ReadProcessMemory(p, LPVOID(haloAddress), &temp, sizeof(temp), nullptr);
+	haloFinalAddress = haloOffset + temp;
+
+
+	//--------------------------------------------------------------------------------
+
 
 	while (true)
 	{
 
 		Sleep(100);
 
-		if (GetAsyncKeyState(VK_F3))
+		if (GetAsyncKeyState(VK_F1))
 		{
 
-			
-			MessageBoxA(NULL, t, "Address of AllocMem", NULL);
+			void* MemAddress = allocMem(p, haloCheat+0x5);
+			void* MemAddressOff = static_cast<char*>(MemAddress) + 0x1;
+			void* MemAddressOff2 = static_cast<char*>(MemAddress) + 0x2;
+			DWORD scriptGold = FindPattern(0x00501000, 6000, (PBYTE)"\x29\x81\xE4\xF5\x00\x00", "xxxxxx");
+			void* jmpToCheat = calJmp(MemAddress, scriptGold, 1, NULL);
+			void* jmpOfReturn = calJmp(MemAddress, scriptGold, 0, sizeof(haloCheat));
 
+			//"Max" Gold
 
-			DWORD x1 = (DWORD)alloc + 0xC;
-			DWORD x2 = (hp + 0x5) - x1 - 0x5;
-			void *x3 = (void*)x2;
-			DWORD x4 = (DWORD)alloc;
-			DWORD x5 = x4 - hp - 0x5;
-			void *x6 = (void*)x5;
+			WriteProcessMemory(p, LPVOID(haloFinalAddress), &haloMax, sizeof(haloMax), nullptr);
 
+			//Write in the allocated memory
 
-			WriteProcessMemory(p, LPVOID(alloc), &cheat, sizeof(cheat), nullptr);
-			WriteProcessMemory(p, LPVOID(pa), &x3, sizeof(x3), nullptr);
-			WriteProcessMemory(p, LPVOID(hp), &ori, sizeof(ori), nullptr);
-			WriteProcessMemory(p, LPVOID(hp+0x1), &x6, sizeof(x6), nullptr);
+			WriteProcessMemory(p, LPVOID(MemAddress), &haloCheat, sizeof(haloCheat), nullptr);
+			WriteProcessMemory(p, LPVOID(MemAddressOff), &jmpInstruction, sizeof(jmpInstruction), nullptr);
+			WriteProcessMemory(p, LPVOID(MemAddressOff2), &jmpOfReturn, sizeof(jmpOfReturn), nullptr);
 
+			//Codecave in game
+
+			WriteProcessMemory(p, LPVOID(scriptGold), &jmpInstruction, sizeof(jmpInstruction), nullptr);
+			WriteProcessMemory(p, LPVOID(scriptGold + 0x1), &jmpToCheat, sizeof(jmpToCheat), nullptr);
+			WriteProcessMemory(p, LPVOID(scriptGold + 0x5), &nopInstruction, sizeof(nopInstruction), nullptr);
 
 		}
 
