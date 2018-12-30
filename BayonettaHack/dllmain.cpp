@@ -7,12 +7,12 @@
 
 using namespace std;
 
-DWORD FindPattern(DWORD dwInicio, DWORD dwFim, BYTE *arrayBytes, CHAR mascara[]) {
+DWORD FindPattern(DWORD dwBegin, DWORD dwEnd, BYTE *arrayBytes, CHAR mask[]) {
 	UINT r = NULL;
-	INT sizeMask = strlen(mascara) - 1;
-	for (DWORD i = dwInicio; i < (dwInicio + dwFim); i++) {
-		if (*(BYTE*)i == arrayBytes[r] || mascara[r] == '?') {
-			if (mascara[r + 1] == '\0')
+	INT sizeMask = strlen(mask) - 1;
+	for (DWORD i = dwBegin; i < (dwBegin + dwEnd); i++) {
+		if (*(BYTE*)i == arrayBytes[r] || mask[r] == '?') {
+			if (mask[r + 1] == '\0')
 				return(i - sizeMask);
 			r++;
 		}
@@ -22,7 +22,7 @@ DWORD FindPattern(DWORD dwInicio, DWORD dwFim, BYTE *arrayBytes, CHAR mascara[])
 	return 0;
 }
 
-DWORD WINAPI inicializa(PVOID ini)
+DWORD WINAPI main(PVOID ini)
 {
 
 	//Actual h4ck3r codes
@@ -110,7 +110,7 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 	switch (ul_reason_for_call)
 	{
 	case DLL_PROCESS_ATTACH:
-		CreateThread(0, 0, &inicializa, 0, 0, 0);
+		CreateThread(0, 0, &main, 0, 0, 0);
 	case DLL_THREAD_ATTACH:
 	case DLL_THREAD_DETACH:
 	case DLL_PROCESS_DETACH:
