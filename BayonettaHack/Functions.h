@@ -17,23 +17,28 @@ void* allocMem(HANDLE p, BYTE cheat[]) //Allocate memory for codecave
 void* calJmp(void* d, DWORD d2, int x, size_t cheatSize) //Calculate the address for jmp instruction
 {
 	
-	if (x == 0)
+	if (x == 0) // Jmp address for return
 	{
 
-		DWORD x1 = (DWORD)d;
-		DWORD x2 = (d2 + sizeof(cheatSize)) - x1 - 0x5;
-		void *x3 = (void*)x2;
-		return x3;
+		DWORD voidToDword = (DWORD)d;
+
+		DWORD calc = (d2 + sizeof(cheatSize)) - voidToDword - 0x5;
+
+
+		void *returnToVoid = (void*)calc;
+		return returnToVoid;
 
 	}
 	
-	if (x == 1)
+	if (x == 1) // Jmp address for allocated memory
 	{
 
-		DWORD x1 = (DWORD)d;
-		DWORD x2 = x1 - d2 - 0x5;
-		void *x3 = (void*)x2;
-		return x3;
+		DWORD voidToDword = (DWORD)d;
+
+		DWORD calc = voidToDword - d2 - 0x5;
+
+		void *returnToVoid = (void*)calc;
+		return returnToVoid;
 
 	}
 	
@@ -112,4 +117,19 @@ void getPointer(HANDLE p, DWORD address, char* point, size_t size) //Future
 
 	}
 
+}
+
+DWORD FindPattern(DWORD dwBegin, DWORD dwEnd, BYTE *arrayBytes, CHAR mask[]) {
+	UINT r = NULL;
+	INT sizeMask = strlen(mask) - 1;
+	for (DWORD i = dwBegin; i < (dwBegin + dwEnd); i++) {
+		if (*(BYTE*)i == arrayBytes[r] || mask[r] == '?') {
+			if (mask[r + 1] == '\0')
+				return(i - sizeMask);
+			r++;
+		}
+		else
+			r = NULL;
+	}
+	return 0;
 }
