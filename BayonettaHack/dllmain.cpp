@@ -14,12 +14,14 @@ DWORD WINAPI main(PVOID ini)
 	//Actual h4ck3r codes
 	BYTE jmpInstruction[] = { 0xE9 };
 	BYTE nopInstruction[] = { 0x90 };
-	BYTE haloCheat[] = { 0x90 }; 
-	BYTE healthCheat[] = { 0x90 };
+	BYTE haloCheat[] = { 0x90, 0xE9 }; 
+	BYTE healthCheat[] = { 0x90, 0xE9 };
+	BYTE witchTimeCheat[] = { 0xC7, 0x86, 0x5C, 0x5D, 0x09, 0x00, 0x00, 0x00, 0xC8, 0x42, 0xF3, 0x0F, 0x10, 0x96, 0x5C, 0x5D, 0x09, 0x00, 0xE9 };
 
 	//Actual original/patterns codes
 	BYTE goldBytes[] = { 0x29, 0x81, 0xE4, 0xF5, 0x00, 0x00 };
 	BYTE healthBytes[] = { 0x89, 0x86, 0x08, 0x35, 0x09, 0x00 };
+	BYTE witchTimeBytes[] = { 0xF3, 0x0F, 0x10, 0x96, 0x5C, 0x5D, 0x09, 0x00 };
 
 	//Other things lol
 
@@ -52,6 +54,10 @@ DWORD WINAPI main(PVOID ini)
 	int healthMax = 8000;
 	void* healthMemAddressOri = 0;
 	void* healthScriptAddressOri = 0;
+
+	//Witch Time
+	void* witchTimeAddressOri = 0;
+	void* witchTimeMemAddressOri = 0;
 
 	
 	//--------------------------------------------------------------------------------
@@ -94,8 +100,7 @@ DWORD WINAPI main(PVOID ini)
 		{
 
 			void* MemAddress = allocMem(p, haloCheat + 0x5);
-			void* MemAddressOff = static_cast<char*>(MemAddress) + 0x1;
-			void* MemAddressOff2 = static_cast<char*>(MemAddress) + 0x2;
+			void* MemAddressOff = static_cast<char*>(MemAddress) + 0x2;
 			
 			DWORD scriptGold = FindPattern(0x00501000, 6000, goldBytes, "xxxxxx");
 
@@ -108,8 +113,8 @@ DWORD WINAPI main(PVOID ini)
 				//Define some variables
 
 				status = 1;
-				haloScriptAddressOri = (void*)scriptGold;
-				haloMemAddressOri = (void*)MemAddress;
+				haloScriptAddressOri = reinterpret_cast<void*>(scriptGold);
+				haloMemAddressOri = MemAddress;
 
 				//"Max" Gold
 
@@ -118,8 +123,7 @@ DWORD WINAPI main(PVOID ini)
 				//Write in the allocated memory
 
 				WriteProcessMemory(p, LPVOID(MemAddress), &haloCheat, sizeof(haloCheat), nullptr);
-				WriteProcessMemory(p, LPVOID(MemAddressOff), &jmpInstruction, sizeof(jmpInstruction), nullptr);
-				WriteProcessMemory(p, LPVOID(MemAddressOff2), &jmpOfReturn, sizeof(jmpOfReturn), nullptr);
+				WriteProcessMemory(p, LPVOID(MemAddressOff), &jmpOfReturn, sizeof(jmpOfReturn), nullptr);
 
 				//Codecave in game
 
@@ -146,8 +150,7 @@ DWORD WINAPI main(PVOID ini)
 		{
 			
 			void* MemAddress = allocMem(p, healthCheat+0x5);
-			void* MemAddressOff = static_cast<char*>(MemAddress) + 0x1;
-			void* MemAddressOff2 = static_cast<char*>(MemAddress) + 0x2;
+			void* MemAddressOff = static_cast<char*>(MemAddress) + 0x2;
 
 			DWORD scriptHealth = FindPattern(0x009D4000, 6000, healthBytes, "xxxxxx");
 
@@ -157,26 +160,21 @@ DWORD WINAPI main(PVOID ini)
 			if (status == 0)
 			{
 
+				//Define some variables
+
 				status = 1;
-				healthScriptAddressOri = (void*)scriptHealth;
-				healthMemAddressOri = (void*)MemAddress;
+				healthScriptAddressOri = reinterpret_cast<void*>(scriptHealth);
+				healthMemAddressOri = MemAddress;
 
 				//Write the max health
 
 				WriteProcessMemory(p, LPVOID(healthFirstFinalAddress), &healthMax, sizeof(healthMax), nullptr);
 				WriteProcessMemory(p, LPVOID(healthSecondFinalAddress), &healthMax, sizeof(healthMax), nullptr);
-				char t[1024];
-				char t2[1024];
-				sprintf_s(t, "%0x", healthFirstFinalAddress);
-				sprintf_s(t2, "%0x", healthSecondFinalAddress);
-				MessageBoxA(NULL, t, "oi", NULL);
-				MessageBoxA(NULL, t2, "oi", NULL);
 
 				//Write in the allocated mem
 
 				WriteProcessMemory(p, LPVOID(MemAddress), &healthCheat, sizeof(healthCheat), nullptr);
-				WriteProcessMemory(p, LPVOID(MemAddressOff), &jmpInstruction, sizeof(jmpInstruction), nullptr);
-				WriteProcessMemory(p, LPVOID(MemAddressOff2), &jmpOfReturn, sizeof(jmpOfReturn), nullptr);
+				WriteProcessMemory(p, LPVOID(MemAddressOff), &jmpOfReturn, sizeof(jmpOfReturn), nullptr);
 
 				//c0d3 c4v1ng
 
@@ -196,6 +194,53 @@ DWORD WINAPI main(PVOID ini)
 
 			}
 		
+		}
+
+		if (GetAsyncKeyState(VK_F3))
+		{
+
+			void* MemAddress = allocMem(p, witchTimeCheat + 0x5);
+			void* MemAddressOff = static_cast<char*>(MemAddress) + sizeof(witchTimeCheat);
+
+			DWORD scriptWitchTime = FindPattern(0x009E1000, 6000, witchTimeBytes, "xxxxxxxx");
+			
+			void* jmpToCheat = calJmp(MemAddress, scriptWitchTime, 1, NULL);
+			void* jmpOfReturn = calJmp((static_cast<char*>(MemAddressOff)-0x1), scriptWitchTime, 0, 0x8);
+
+			if (status == 0)
+			{
+
+				//Define some variables
+				status = 1;
+				witchTimeMemAddressOri = MemAddress;
+				witchTimeAddressOri = reinterpret_cast<void*>(scriptWitchTime);
+
+				//Write in the allocated memory
+
+				WriteProcessMemory(p, LPVOID(MemAddress), &witchTimeCheat, sizeof(witchTimeCheat), nullptr);
+				WriteProcessMemory(p, LPVOID(MemAddressOff), &jmpOfReturn, sizeof(jmpOfReturn), nullptr);
+
+				//C0d35 c4v35
+
+				WriteProcessMemory(p, LPVOID(scriptWitchTime), &jmpInstruction, sizeof(jmpInstruction), nullptr);
+				WriteProcessMemory(p, LPVOID(scriptWitchTime + 0x1), &jmpToCheat, sizeof(jmpToCheat), nullptr);
+				WriteProcessMemory(p, LPVOID(scriptWitchTime + 0x5), &nopInstruction, sizeof(nopInstruction), nullptr);
+				WriteProcessMemory(p, LPVOID(scriptWitchTime + 0x6), &nopInstruction, sizeof(nopInstruction), nullptr);
+				WriteProcessMemory(p, LPVOID(scriptWitchTime + 0x7), &nopInstruction, sizeof(nopInstruction), nullptr);
+
+
+			}
+			else {
+
+				status = 0;
+
+				//Return original code in game memory and deallocate the memory allocated by allocMem
+
+				WriteProcessMemory(p, LPVOID(witchTimeAddressOri), &witchTimeBytes, sizeof(witchTimeBytes), nullptr);
+				VirtualFreeEx(p, witchTimeMemAddressOri, sizeof(witchTimeCheat + 0x5), MEM_DECOMMIT);
+
+			}
+
 		}
 
 	}
