@@ -20,12 +20,12 @@ void* calJmp(void* d, DWORD d2, int x, size_t cheatSize) //Calculate the address
 	if (x == 0) // Jmp address for return
 	{
 
-		DWORD voidToDword = (DWORD)d;
+		DWORD voidToDword = reinterpret_cast<DWORD>(d);
 
-		DWORD calc = (d2 + sizeof(cheatSize)) - voidToDword - 0x5;
+		DWORD calc = (d2 + cheatSize) - voidToDword - 0x5;
 
 
-		void *returnToVoid = (void*)calc;
+		void *returnToVoid = reinterpret_cast<void*>(calc);
 		return returnToVoid;
 
 	}
@@ -33,11 +33,11 @@ void* calJmp(void* d, DWORD d2, int x, size_t cheatSize) //Calculate the address
 	if (x == 1) // Jmp address for allocated memory
 	{
 
-		DWORD voidToDword = (DWORD)d;
+		DWORD voidToDword = reinterpret_cast<DWORD>(d);
 
 		DWORD calc = voidToDword - d2 - 0x5;
 
-		void *returnToVoid = (void*)calc;
+		void *returnToVoid = reinterpret_cast<void*>(calc);
 		return returnToVoid;
 
 	}
@@ -95,7 +95,7 @@ void getPointer(HANDLE p, DWORD address, char* point, size_t size) //Future
 
 		}
 
-		void* pointer = (void*)buff;
+		void* pointer = reinterpret_cast<void*>(buff);
 		cout << hex << buff;
 		//return pointer;
 
