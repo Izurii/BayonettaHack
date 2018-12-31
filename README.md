@@ -13,9 +13,9 @@ F1 ~ Unlimited Gold (Now working!!!)
 
 F2 ~ Unlimited Health (Working too!!)
 
-F3 ~ Unlimited Witch Time (Same as above)
+F3 ~ Unlimited Witch Time (Not working!)
 
-F4 ~ Unlimited Magic (Same as...)
+F4 ~ Unlimited Magic (Same as above...)
 
 F5 ~ One Hit Kill (Same...)
 
