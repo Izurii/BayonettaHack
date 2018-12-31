@@ -13,11 +13,11 @@ F1 ~ Unlimited Gold (Now working!!!)
 
 F2 ~ Unlimited Health (Working too!!)
 
-F3 ~ Unlimited Witch Time (Not working!)
+F3 ~ Unlimited Witch Time (working)
 
-F4 ~ Unlimited Magic (Same as above...)
+F4 ~ Unlimited Magic (Not yet...)
 
-F5 ~ One Hit Kill (Same...)
+F5 ~ One Hit Kill (Same as...)
 
 F6 ~ Max Giga/Mega Ton (Tired of writing.)
 
