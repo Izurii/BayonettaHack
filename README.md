@@ -11,7 +11,7 @@ Just inject the dll and use the functions keys to active the cheats.
 
 F1 ~ Unlimited Gold (Now working!!!)
 
-F2 ~ Unlimited Health (I'm working on the codes)
+F2 ~ Unlimited Health (Working too!!)
 
 F3 ~ Unlimited Witch Time (Same as above)
 
@@ -32,3 +32,5 @@ F10 ~ Unlimited Alfheim Time (...)
 F11 ~ *.*-_-*.*
 
 F12 ~ -_-*.*-_-
+
+P.S: Now you can deactivate the cheats, just press the function key again.
