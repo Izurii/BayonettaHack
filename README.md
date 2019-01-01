@@ -15,9 +15,9 @@ F2 ~ Unlimited Health (Working too!!)
 
 F3 ~ Unlimited Witch Time (working)
 
-F4 ~ Unlimited Magic (Not yet...)
+F4 ~ Unlimited Magic (Apparently working flawlessly)
 
-F5 ~ One Hit Kill (Same as...)
+F5 ~ One Hit Kill (The same, not working.)
 
 F6 ~ Max Giga/Mega Ton (Tired of writing.)
 
