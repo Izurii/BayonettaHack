@@ -17,9 +17,9 @@ F3 ~ Unlimited Witch Time (working)
 
 F4 ~ Unlimited Magic (Apparently working flawlessly)
 
-F5 ~ One Hit Kill (The same, not working.)
+F5 ~ One Hit Kill (Worki...)
 
-F6 ~ Max Giga/Mega Ton (Tired of writing.)
+F6 ~ Max Giga/Mega Ton (No.)
 
 F7 ~ Infinite Jump (You already know.)
 
