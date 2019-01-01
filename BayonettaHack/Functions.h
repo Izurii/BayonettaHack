@@ -9,7 +9,7 @@ using namespace std;
 void* allocMem(HANDLE p, BYTE cheat[]) //Allocate memory for codecave
 {
 
-	void* AllocMem = VirtualAllocEx(p, NULL, sizeof(cheat) + 1, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+	void* AllocMem = VirtualAllocEx(p, NULL, sizeof(cheat)+0x5 + 1, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
 
 	return AllocMem;
 }
@@ -94,5 +94,12 @@ void putNopes(HANDLE p, DWORD address, int x)
 		address += 0x1;
 
 	}
+
+}
+
+void freeMemory(HANDLE p, void* address, size_t cheatSize)
+{
+
+	VirtualFreeEx(p, address, (cheatSize + 0x5), MEM_DECOMMIT);
 
 }
