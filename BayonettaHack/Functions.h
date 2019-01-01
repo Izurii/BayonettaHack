@@ -68,57 +68,6 @@ uintptr_t getBaseAddress(DWORD procId, const wchar_t* modName) //Get baseaddres 
 	return modBaseAddr;
 }
 
-void getPointer(HANDLE p, DWORD address, char* point, size_t size) //Future
-{
-
-	unsigned long temp, buff;
-	ReadProcessMemory(p, LPVOID(address), &temp, sizeof(temp), nullptr);
-	//cout << size;
-
-	if (size < 2)
-	{
-
-		buff = temp + point[0];
-		void* pointer = (void*)buff;
-		//return buff;
-		cout << hex << buff;
-
-	}
-	else if (size >= 2 && size < 3)
-	{
-
-		for (int i = 0; i < size; i++)
-		{
-
-			buff = temp + point[i];
-			ReadProcessMemory(p, LPVOID(buff), &temp, sizeof(temp), nullptr);
-
-		}
-
-		void* pointer = reinterpret_cast<void*>(buff);
-		cout << hex << buff;
-		//return pointer;
-
-	}
-
-	if (size >= 3)
-	{
-
-		for (int i = 0; i < size; i++)
-		{
-
-			buff = temp + point[i];
-			ReadProcessMemory(p, LPVOID(buff), &temp, sizeof(temp), nullptr);
-
-		}
-
-		void* pointer = (void*)buff;
-		cout << hex << buff;
-
-	}
-
-}
-
 DWORD FindPattern(DWORD dwBegin, DWORD dwEnd, BYTE *arrayBytes, CHAR mask[]) {
 	UINT r = NULL;
 	INT sizeMask = strlen(mask) - 1;
@@ -132,4 +81,18 @@ DWORD FindPattern(DWORD dwBegin, DWORD dwEnd, BYTE *arrayBytes, CHAR mask[]) {
 			r = NULL;
 	}
 	return 0;
+}
+
+void putNopes(HANDLE p, DWORD address, int x)
+{
+
+	BYTE nope[] = { 0x90 };
+	for (int i = 0; i < x; i++)
+	{
+
+		WriteProcessMemory(p, LPVOID(address + 0x5), &nope, sizeof(nope), nullptr);
+		address += 0x1;
+
+	}
+
 }
