@@ -19,6 +19,7 @@ DWORD WINAPI main(PVOID ini)
 	BYTE witchTimeCheat[] = { 0xC7, 0x86, 0x5C, 0x5D, 0x09, 0x00, 0x00, 0x00, 0xC8, 0x42, 0xF3, 0x0F, 0x10, 0x96, 0x5C, 0x5D, 0x09, 0x00, 0xE9 };
 	BYTE magicCheat1[] = { 0x90, 0xE9 };
 	BYTE magicCheat2[] = { 0x90, 0xE9 };
+	BYTE oneHitCheat[] = { 0xC7, 0x86, 0xB4, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xE9 };
 
 	//Actual original/patterns codes
 	BYTE goldBytes[] = { 0x29, 0x81, 0xE4, 0xF5, 0x00, 0x00 };
@@ -26,6 +27,7 @@ DWORD WINAPI main(PVOID ini)
 	BYTE witchTimeBytes[] = { 0xF3, 0x0F, 0x10, 0x96, 0x5C, 0x5D, 0x09, 0x00 };
 	BYTE magicBytes1[] = { 0xF3, 0x0F, 0x5C, 0x05, 0xDC, 0x0D, 0xDA, 0x00 };
 	BYTE magicBytes2[] = { 0xF3, 0x0F, 0x5C, 0x05, 0x58, 0x4B, 0xDA, 0x00, 0x0F, 0x57, 0xC9, 0x0F, 0x2F, 0xC8, 0xF3, 0x0F, 0x11, 0x05 };
+	BYTE oneHitBytes[] = { 0x89, 0x86, 0xB4, 0x06, 0x00, 0x00, 0x85, 0xC0, 0x7F, 0x26 };
 
 	//Other things lol
 
@@ -72,6 +74,10 @@ DWORD WINAPI main(PVOID ini)
 	void* magicMemAddressOri2 = 0;
 	void* magicScriptAddressOri1 = 0;
 	void* magicScriptAddressOri2 = 0;
+
+	//One Hit Kill
+	void* oneHitMemAddressOri = 0;
+	void* oneHitScriptAddressOri = 0;
 
 	//--------------------------------------------------------------------------------
 
@@ -164,7 +170,7 @@ DWORD WINAPI main(PVOID ini)
 				//Return original code in game memory and deallocate the memory allocated by allocMem
 
 				WriteProcessMemory(p, LPVOID(haloScriptAddressOri), &goldBytes, sizeof(goldBytes), nullptr);
-				VirtualFreeEx(p, haloMemAddressOri, sizeof(haloCheat + 0x5), MEM_DECOMMIT);
+				freeMemory(p, haloMemAddressOri, sizeof(haloCheat));
 
 			}
 
@@ -220,7 +226,7 @@ DWORD WINAPI main(PVOID ini)
 				//Return original code in game memory and deallocate the memory allocated by allocMem
 
 				WriteProcessMemory(p, LPVOID(healthScriptAddressOri), &healthBytes, sizeof(healthBytes), nullptr);
-				VirtualFreeEx(p, healthMemAddressOri, sizeof(healthCheat + 0x5), MEM_DECOMMIT);
+				freeMemory(p, healthMemAddressOri, sizeof(healthCheat));
 
 			}
 
@@ -271,7 +277,7 @@ DWORD WINAPI main(PVOID ini)
 				//Return original code in game memory and deallocate the memory allocated by allocMem
 
 				WriteProcessMemory(p, LPVOID(witchTimeAddressOri), &witchTimeBytes, sizeof(witchTimeBytes), nullptr);
-				VirtualFreeEx(p, witchTimeMemAddressOri, sizeof(witchTimeCheat + 0x5), MEM_DECOMMIT);
+				freeMemory(p, witchTimeMemAddressOri, sizeof(witchTimeCheat));
 
 			}
 
@@ -341,10 +347,61 @@ DWORD WINAPI main(PVOID ini)
 
 				WriteProcessMemory(p, LPVOID(magicScriptAddressOri1), &magicBytes1, sizeof(magicBytes1), nullptr);
 				WriteProcessMemory(p, LPVOID(magicScriptAddressOri2), &magicBytes2, sizeof(magicBytes2), nullptr);
-				VirtualFreeEx(p, magicMemAddressOri1, sizeof(magicCheat1 + 0x5), MEM_DECOMMIT);
-				VirtualFreeEx(p, magicMemAddressOri2, sizeof(magicCheat2 + 0x5), MEM_DECOMMIT);
+				freeMemory(p, magicMemAddressOri1, sizeof(magicCheat1));
+				freeMemory(p, magicMemAddressOri2, sizeof(magicCheat1));
 
 			}
+
+		}
+
+		if (GetAsyncKeyState(VK_F5))
+		{
+
+			//Allocate Memory
+
+			void* MemAddress = allocMem(p, oneHitCheat);
+			void* MemAddressOff = static_cast<char*>(MemAddress) + sizeof(oneHitCheat);
+
+			//Find the orignal code
+
+			DWORD scriptoneHit = FindPattern(0x00457000, 6000, oneHitBytes, "xxxxxxxxxx");
+
+			//Calculate jmp
+
+			void* jmpToCheat = calJmp(MemAddress, scriptoneHit, 1, NULL);
+			void* jmpOfReturn = calJmp((static_cast<char*>(MemAddressOff) + 0x4), scriptoneHit, 0, sizeof(oneHitBytes));
+
+			if (status == 0)
+			{
+
+				//F.H.R.I.T.P
+
+				status = 1;
+
+				oneHitMemAddressOri = MemAddress;
+				oneHitScriptAddressOri = reinterpret_cast<void*>(scriptoneHit);
+
+				//Write in allocated memory
+
+				WriteProcessMemory(p, LPVOID(MemAddress), &oneHitCheat, sizeof(oneHitCheat), nullptr);
+				WriteProcessMemory(p, LPVOID(MemAddressOff), &jmpOfReturn, sizeof(jmpOfReturn), nullptr);
+
+				//ca ving c0 d 3 (115*2-225)
+
+				WriteProcessMemory(p, LPVOID(scriptoneHit), &jmpInstruction, sizeof(jmpInstruction), nullptr);
+				WriteProcessMemory(p, LPVOID(scriptoneHit + 0x1), &jmpToCheat, sizeof(jmpToCheat), nullptr);
+				putNopes(p, scriptoneHit, 1);
+
+			}
+			else {
+
+				status = 0;
+
+				WriteProcessMemory(p, LPVOID(oneHitScriptAddressOri), &oneHitBytes, sizeof(oneHitBytes), nullptr);
+				freeMemory(p, oneHitMemAddressOri, sizeof(oneHitCheat));
+
+			}
+
 
 		}
 
