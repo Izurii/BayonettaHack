@@ -40,10 +40,9 @@ DWORD WINAPI main(PVOID ini)
 	GetWindowThreadProcessId(hwnd, &processId);
 	HANDLE p = GetCurrentProcess();
 	unsigned int temp, buff;
-	unsigned int status = 0;
 	
 
-	/*  Address || Pointers && Offsets (P.S: Variables for the final addresses) */
+	/*  Address || Pointers && Offsets (P.S: Variables for the final addresses) status too */
 
 	DWORD gameBaseAddress = getBaseAddress(processId, L"Bayonetta.exe");
 
@@ -54,6 +53,7 @@ DWORD WINAPI main(PVOID ini)
 	int haloMax = 9000000;
 	void* haloMemAddressOri = 0;
 	void* haloScriptAddressOri = 0;
+	int statusHaloCheat = 0;
 
 	//Health
 	DWORD healthFirstAddress = gameBaseAddress + 0x0567AB8C;
@@ -64,10 +64,12 @@ DWORD WINAPI main(PVOID ini)
 	int healthMax = 8000;
 	void* healthMemAddressOri = 0;
 	void* healthScriptAddressOri = 0;
+	int statusHealthCheat = 0;
 
 	//Witch Time
 	void* witchTimeAddressOri = 0;
 	void* witchTimeMemAddressOri = 0;
+	int statusWitchTimeCheat = 0;
 
 	//Magic
 	DWORD magicAddress = gameBaseAddress + 0x004BC82C;
@@ -78,16 +80,19 @@ DWORD WINAPI main(PVOID ini)
 	void* magicMemAddressOri2 = 0;
 	void* magicScriptAddressOri1 = 0;
 	void* magicScriptAddressOri2 = 0;
+	int statusMagicCheat = 0;
 
 	//One Hit Kill
 	void* oneHitMemAddressOri = 0;
 	void* oneHitScriptAddressOri = 0;
+	int statusOneHitCheat = 0;
 
 	//Max Giga/Mega Ton
 	void* maxTonMemAddressOri1 = 0;
 	void* maxTonMemAddressOri2 = 0;
 	void* maxTonScriptAddressOri1 = 0;
 	void* maxTonScriptAddressOri2 = 0;
+	int statusMaxTonCheat = 0;
 
 	//--------------------------------------------------------------------------------
 
@@ -128,7 +133,7 @@ DWORD WINAPI main(PVOID ini)
 	while (true)
 	{
 
-		Sleep(50);
+		Sleep(100);
 
 		if (GetAsyncKeyState(VK_F1))
 		{
@@ -147,13 +152,13 @@ DWORD WINAPI main(PVOID ini)
 			void* jmpToCheat = calJmp(MemAddress, scriptGold, 1, NULL);
 			void* jmpOfReturn = calJmp(static_cast<char*>(MemAddress) - 0x3, scriptGold, 0, sizeof(haloCheat));
 
-			if (status == 0)
+			if (statusHaloCheat == 0)
 			{
 
 				//Define some variables
 
 				Beep(2000, 200);
-				status = 1;
+				statusHaloCheat = 1;
 				haloScriptAddressOri = reinterpret_cast<void*>(scriptGold);
 				haloMemAddressOri = MemAddress;
 
@@ -177,7 +182,7 @@ DWORD WINAPI main(PVOID ini)
 			{
 
 				Beep(1000, 200);
-				status = 0;
+				statusHaloCheat = 0;
 
 				//Return original code in game memory and deallocate the memory allocated by allocMem
 
@@ -205,13 +210,13 @@ DWORD WINAPI main(PVOID ini)
 			void* jmpToCheat = calJmp(MemAddress, scriptHealth, 1, NULL);
 			void* jmpOfReturn = calJmp(MemAddress, scriptHealth, 0, sizeof(healthCheat));
 
-			if (status == 0)
+			if (statusHealthCheat == 0)
 			{
 
 				//Define some variables
 
 				Beep(2000, 200);
-				status = 1;
+				statusHealthCheat = 1;
 				healthScriptAddressOri = reinterpret_cast<void*>(scriptHealth);
 				healthMemAddressOri = MemAddress;
 
@@ -235,7 +240,7 @@ DWORD WINAPI main(PVOID ini)
 			else {
 
 				Beep(1000, 200);
-				status = 0;
+				statusHealthCheat = 0;
 
 				//Return original code in game memory and deallocate the memory allocated by allocMem
 
@@ -263,13 +268,13 @@ DWORD WINAPI main(PVOID ini)
 			void* jmpToCheat = calJmp(MemAddress, scriptWitchTime, 1, NULL);
 			void* jmpOfReturn = calJmp((static_cast<char*>(MemAddressOff) - 0x1), scriptWitchTime, 0, 0x8);
 
-			if (status == 0)
+			if (statusWitchTimeCheat == 0)
 			{
 
 				//Define some variables
-				
+
 				Beep(2000, 200);
-				status = 1;
+				statusWitchTimeCheat = 1;
 				witchTimeMemAddressOri = MemAddress;
 				witchTimeAddressOri = reinterpret_cast<void*>(scriptWitchTime);
 
@@ -289,7 +294,7 @@ DWORD WINAPI main(PVOID ini)
 			else {
 
 				Beep(1000, 200);
-				status = 0;
+				statusWitchTimeCheat = 0;
 
 				//Return original code in game memory and deallocate the memory allocated by allocMem
 
@@ -322,13 +327,13 @@ DWORD WINAPI main(PVOID ini)
 			void* jmpOfReturn1 = calJmp((static_cast<char*>(MemAddressOff1) - 0x1), scriptMagic1, 0, sizeof(magicBytes1));
 			void* jmpOfReturn2 = calJmp((static_cast<char*>(MemAddressOff2) + 0x9), scriptMagic2, 0, sizeof(magicBytes2));
 
-			if (status == 0)
+			if (statusMagicCheat == 0)
 			{
 
 				//As you see...
 
 				Beep(2000, 200);
-				status = 1;
+				statusMagicCheat = 1;
 				magicScriptAddressOri1 = reinterpret_cast<void*>(scriptMagic1);
 				magicScriptAddressOri2 = reinterpret_cast<void*>(scriptMagic2);
 				magicMemAddressOri1 = MemAddress1;
@@ -360,7 +365,7 @@ DWORD WINAPI main(PVOID ini)
 			else {
 
 				Beep(1000, 200);
-				status = 0;
+				statusMagicCheat = 0;
 
 				//Return original code in game memory and deallocate the memory allocated by allocMem
 
@@ -390,13 +395,13 @@ DWORD WINAPI main(PVOID ini)
 			void* jmpToCheat = calJmp(MemAddress, scriptoneHit, 1, NULL);
 			void* jmpOfReturn = calJmp((static_cast<char*>(MemAddressOff) + 0x4), scriptoneHit, 0, sizeof(oneHitBytes));
 
-			if (status == 0)
+			if (statusOneHitCheat == 0)
 			{
 
 				//F.H.R.I.T.P
 
 				Beep(2000, 200);
-				status = 1;
+				statusOneHitCheat = 1;
 				oneHitMemAddressOri = MemAddress;
 				oneHitScriptAddressOri = reinterpret_cast<void*>(scriptoneHit);
 
@@ -415,7 +420,7 @@ DWORD WINAPI main(PVOID ini)
 			else {
 
 				Beep(1000, 200);
-				status = 0;
+				statusOneHitCheat = 0;
 
 				WriteProcessMemory(p, LPVOID(oneHitScriptAddressOri), &oneHitBytes, sizeof(oneHitBytes), nullptr);
 				freeMemory(p, oneHitMemAddressOri, sizeof(oneHitCheat));
@@ -428,10 +433,14 @@ DWORD WINAPI main(PVOID ini)
 		if (GetAsyncKeyState(VK_F6))
 		{
 
+			//Allocate Memory
+
 			void* MemAddress1 = allocMem(p, maxTonCheat1);
 			void* MemAddress2 = allocMem(p, maxTonCheat1);
 			void* MemAddressOff1 = static_cast<char*>(MemAddress1) + sizeof(maxTonCheat1);
 			void* MemAddressOff2 = static_cast<char*>(MemAddress2) + sizeof(maxTonCheat2);
+
+			//Original code
 
 			DWORD scriptmaxTon1 = FindPattern(0x004A8000, 6000, maxTonBytes1, "xxxxxx");
 			DWORD scriptmaxTon2 = FindPattern(0x00C1D000, 6000, maxTonBytes2, "xxxxxx");
@@ -444,14 +453,13 @@ DWORD WINAPI main(PVOID ini)
 			void* jmpOfReturn2 = calJmp(static_cast<char*>(MemAddress2)+0x14, scriptmaxTon2, 0, sizeof(maxTonCheat2));
 
 
-			if (status == 0)
+			if (statusMaxTonCheat == 0)
 			{
 
 				//Define
 
 				Beep(2000, 200);
-				status = 1;
-
+				statusMaxTonCheat = 1;
 				maxTonMemAddressOri1 = MemAddress1;
 				maxTonMemAddressOri2 = MemAddress2;
 				maxTonScriptAddressOri1 = reinterpret_cast<void*>(scriptmaxTon1);
@@ -475,7 +483,7 @@ DWORD WINAPI main(PVOID ini)
 			else {
 
 				Beep(1000, 200);
-				status = 0;
+				statusMaxTonCheat = 0;
 
 				WriteProcessMemory(p, LPVOID(maxTonScriptAddressOri1), &maxTonBytes1, sizeof(maxTonBytes1), nullptr);
 				WriteProcessMemory(p, LPVOID(maxTonScriptAddressOri2), &maxTonBytes2, sizeof(maxTonBytes2), nullptr);
