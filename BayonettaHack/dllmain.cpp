@@ -22,6 +22,7 @@ DWORD WINAPI main(PVOID ini)
 	BYTE oneHitCheat[] = { 0xC7, 0x86, 0xB4, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xE9 };
 	BYTE maxTonCheat1[] = { 0xC7, 0x46, 0x2C, 0x00, 0x00, 0xC8, 0x42, 0xF3, 0x0F, 0x58, 0x46, 0x2C, 0xE9 };
 	BYTE maxTonCheat2[] = { 0xC7, 0x46, 0x74, 0x00, 0x00, 0xC8, 0x42, 0xF3, 0x0F, 0x10, 0x46, 0x74, 0xE9 };
+	BYTE infJumpCheat[] = { 0x90, 0xE9 };
 
 	//Actual original/patterns codes
 	BYTE goldBytes[] = { 0x29, 0x81, 0xE4, 0xF5, 0x00, 0x00 };
@@ -32,6 +33,7 @@ DWORD WINAPI main(PVOID ini)
 	BYTE oneHitBytes[] = { 0x89, 0x86, 0xB4, 0x06, 0x00, 0x00, 0x85, 0xC0, 0x7F, 0x26 };
 	BYTE maxTonBytes1[] = { 0xF3, 0x0F, 0x58, 0x46, 0x2C, 0x50 };
 	BYTE maxTonBytes2[] = { 0xF3, 0x0F, 0x10, 0x46, 0x74, 0x50 };
+	BYTE infJumpBytes[] = { 0x01, 0xAE, 0x78, 0x35, 0x09, 0x00 };
 
 	//Other things lol
 
@@ -93,6 +95,11 @@ DWORD WINAPI main(PVOID ini)
 	void* maxTonScriptAddressOri1 = 0;
 	void* maxTonScriptAddressOri2 = 0;
 	int statusMaxTonCheat = 0;
+
+	//Infinite Jump
+	void* infJumpMemAddressOri = 0;
+	void* infJumpScriptAddressOri = 0;
+	int statusInfJumpCheat = 0;
 
 	//--------------------------------------------------------------------------------
 
@@ -490,6 +497,57 @@ DWORD WINAPI main(PVOID ini)
 				freeMemory(p, maxTonMemAddressOri1, sizeof(maxTonCheat1));
 				freeMemory(p, maxTonMemAddressOri2, sizeof(maxTonCheat2));
 
+
+			}
+
+		}
+
+		if (GetAsyncKeyState(VK_F7))
+		{
+
+			//Allocate memory
+
+			void* MemAddress = allocMem(p, infJumpCheat);
+			void* MemAddressOff = static_cast<char*>(MemAddress) + sizeof(infJumpCheat);
+
+			//Find original
+
+			DWORD scriptInfJump = FindPattern(0x009E8000, 6000, infJumpBytes, "xxxxxx");
+
+			//Calculate jmp
+
+			void* jmpToCheat = calJmp(MemAddress, scriptInfJump, 1, NULL);
+			void* jmpOfReturn = calJmp(static_cast<char*>(MemAddress) - 0x3, scriptInfJump, 0, sizeof(infJumpCheat));
+
+			if (statusInfJumpCheat == 0)
+			{
+
+				//Define
+
+				Beep(2000, 200);
+				statusInfJumpCheat = 1;
+				infJumpMemAddressOri = MemAddress;
+				infJumpScriptAddressOri = reinterpret_cast<void*>(scriptInfJump);
+
+				//Write in allocated memory
+
+				WriteProcessMemory(p, LPVOID(MemAddress), &infJumpCheat, sizeof(infJumpCheat), nullptr);
+				WriteProcessMemory(p, LPVOID(MemAddressOff), &jmpOfReturn, sizeof(jmpOfReturn), nullptr);
+
+				//huhh c4v3s
+
+				WriteProcessMemory(p, LPVOID(scriptInfJump), &jmpInstruction, sizeof(jmpInstruction), nullptr);
+				WriteProcessMemory(p, LPVOID(scriptInfJump + 0x1), &jmpToCheat, sizeof(jmpToCheat), nullptr);
+				putNopes(p, scriptInfJump, 1);
+
+			}
+			else {
+
+				Beep(1000, 200);
+				statusInfJumpCheat = 0;
+
+				WriteProcessMemory(p, LPVOID(infJumpScriptAddressOri), &infJumpBytes, sizeof(infJumpBytes), nullptr);
+				freeMemory(p, infJumpMemAddressOri, sizeof(infJumpCheat));
 
 			}
 
