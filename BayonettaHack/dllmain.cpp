@@ -20,6 +20,8 @@ DWORD WINAPI main(PVOID ini)
 	BYTE magicCheat1[] = { 0x90, 0xE9 };
 	BYTE magicCheat2[] = { 0x90, 0xE9 };
 	BYTE oneHitCheat[] = { 0xC7, 0x86, 0xB4, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xE9 };
+	BYTE maxTonCheat1[] = { 0xC7, 0x46, 0x2C, 0x00, 0x00, 0xC8, 0x42, 0xF3, 0x0F, 0x58, 0x46, 0x2C, 0xE9 };
+	BYTE maxTonCheat2[] = { 0xC7, 0x46, 0x74, 0x00, 0x00, 0xC8, 0x42, 0xF3, 0x0F, 0x10, 0x46, 0x74, 0xE9 };
 
 	//Actual original/patterns codes
 	BYTE goldBytes[] = { 0x29, 0x81, 0xE4, 0xF5, 0x00, 0x00 };
@@ -28,6 +30,8 @@ DWORD WINAPI main(PVOID ini)
 	BYTE magicBytes1[] = { 0xF3, 0x0F, 0x5C, 0x05, 0xDC, 0x0D, 0xDA, 0x00 };
 	BYTE magicBytes2[] = { 0xF3, 0x0F, 0x5C, 0x05, 0x58, 0x4B, 0xDA, 0x00, 0x0F, 0x57, 0xC9, 0x0F, 0x2F, 0xC8, 0xF3, 0x0F, 0x11, 0x05 };
 	BYTE oneHitBytes[] = { 0x89, 0x86, 0xB4, 0x06, 0x00, 0x00, 0x85, 0xC0, 0x7F, 0x26 };
+	BYTE maxTonBytes1[] = { 0xF3, 0x0F, 0x58, 0x46, 0x2C, 0x50 };
+	BYTE maxTonBytes2[] = { 0xF3, 0x0F, 0x10, 0x46, 0x74, 0x50 };
 
 	//Other things lol
 
@@ -78,6 +82,12 @@ DWORD WINAPI main(PVOID ini)
 	//One Hit Kill
 	void* oneHitMemAddressOri = 0;
 	void* oneHitScriptAddressOri = 0;
+
+	//Max Giga/Mega Ton
+	void* maxTonMemAddressOri1 = 0;
+	void* maxTonMemAddressOri2 = 0;
+	void* maxTonScriptAddressOri1 = 0;
+	void* maxTonScriptAddressOri2 = 0;
 
 	//--------------------------------------------------------------------------------
 
@@ -402,6 +412,66 @@ DWORD WINAPI main(PVOID ini)
 
 			}
 
+
+		}
+
+		if (GetAsyncKeyState(VK_F6))
+		{
+
+			void* MemAddress1 = allocMem(p, maxTonCheat1);
+			void* MemAddress2 = allocMem(p, maxTonCheat1);
+			void* MemAddressOff1 = static_cast<char*>(MemAddress1) + sizeof(maxTonCheat1);
+			void* MemAddressOff2 = static_cast<char*>(MemAddress2) + sizeof(maxTonCheat2);
+
+			DWORD scriptmaxTon1 = FindPattern(0x004A8000, 6000, maxTonBytes1, "xxxxxx");
+			DWORD scriptmaxTon2 = FindPattern(0x00C1D000, 6000, maxTonBytes2, "xxxxxx");
+
+			//Calculate jmp
+
+			void* jmpToCheat1 = calJmp(MemAddress1, scriptmaxTon1, 1, NULL);
+			void* jmpToCheat2 = calJmp(MemAddress2, scriptmaxTon2, 1, NULL);
+			void* jmpOfReturn1 = calJmp(static_cast<char*>(MemAddress1)+0x14, scriptmaxTon1, 0, sizeof(maxTonCheat1));
+			void* jmpOfReturn2 = calJmp(static_cast<char*>(MemAddress2)+0x14, scriptmaxTon2, 0, sizeof(maxTonCheat2));
+
+
+			if (status == 0)
+			{
+
+				//Define
+
+				status = 1;
+
+				maxTonMemAddressOri1 = MemAddress1;
+				maxTonMemAddressOri2 = MemAddress2;
+				maxTonScriptAddressOri1 = reinterpret_cast<void*>(scriptmaxTon1);
+				maxTonScriptAddressOri2 = reinterpret_cast<void*>(scriptmaxTon2);
+
+				//Write allocated memory
+
+				WriteProcessMemory(p, LPVOID(MemAddress1), &maxTonCheat1, sizeof(maxTonCheat1), nullptr);
+				WriteProcessMemory(p, LPVOID(MemAddressOff1), &jmpOfReturn1, sizeof(jmpOfReturn1), nullptr);
+				WriteProcessMemory(p, LPVOID(MemAddress2), &maxTonCheat2, sizeof(maxTonCheat2), nullptr);
+				WriteProcessMemory(p, LPVOID(MemAddressOff2), &jmpOfReturn2, sizeof(jmpOfReturn2), nullptr);
+
+				//Fucking h4ck3r5
+
+				WriteProcessMemory(p, LPVOID(scriptmaxTon1), &jmpInstruction, sizeof(jmpInstruction), nullptr);
+				WriteProcessMemory(p, LPVOID(scriptmaxTon1 + 0x1), &jmpToCheat1, sizeof(jmpToCheat1), nullptr);
+				WriteProcessMemory(p, LPVOID(scriptmaxTon2), &jmpInstruction, sizeof(jmpInstruction), nullptr);
+				WriteProcessMemory(p, LPVOID(scriptmaxTon2 + 0x1), &jmpToCheat2, sizeof(jmpToCheat2), nullptr);
+
+			}
+			else {
+
+				status = 0;
+
+				WriteProcessMemory(p, LPVOID(maxTonScriptAddressOri1), &maxTonBytes1, sizeof(maxTonBytes1), nullptr);
+				WriteProcessMemory(p, LPVOID(maxTonScriptAddressOri2), &maxTonBytes2, sizeof(maxTonBytes2), nullptr);
+				freeMemory(p, maxTonMemAddressOri1, sizeof(maxTonCheat1));
+				freeMemory(p, maxTonMemAddressOri2, sizeof(maxTonCheat2));
+
+
+			}
 
 		}
 
