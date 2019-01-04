@@ -21,9 +21,9 @@ F5 ~ One Hit Kill (Worki...)
 
 F6 ~ Max Giga/Mega Ton (Yes, it's working.)
 
-F7 ~ Infinite Jump (You already know. <- not working)
+F7 ~ Infinite Jump (You already know. <- working)
 
-F8 ~ Max All Items (You need to have at least one item to max him <- This doesn't count the compounds needed to make the Lollipops etc) (You know...)
+F8 ~ Max All Items (You need to have at least one item to max him <- This doesn't count the compounds needed to make the Lollipops etc) (Not workin...)
 
 F9 ~ Infinite Alfheim Life (Not today bro)
 
