@@ -23,7 +23,7 @@ F6 ~ Max Giga/Mega Ton (Yes, it's working.)
 
 F7 ~ Infinite Jump (You already know. <- working)
 
-F8 ~ Max All Items (You need to have at least one item to max him <- This doesn't count the compounds needed to make the Lollipops etc) (Not workin...)
+F8 ~ Max All Items (You need to have at least one item to max him <- This doesn't count the compounds needed to make the Lollipops etc) (Now working) (If you don't have the item you want to max, just make him with the compounds and after that activate the cheat again and voila)
 
 F9 ~ Infinite Alfheim Life (Not today bro)
 
