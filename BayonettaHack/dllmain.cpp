@@ -41,7 +41,7 @@ DWORD WINAPI main(PVOID ini)
 	DWORD processId;
 	GetWindowThreadProcessId(hwnd, &processId);
 	HANDLE p = GetCurrentProcess();
-	unsigned int temp, buff;
+	unsigned int temp;
 	
 
 	/*  Address || Pointers && Offsets (P.S: Variables for the final addresses) status too */
@@ -60,8 +60,6 @@ DWORD WINAPI main(PVOID ini)
 	//Health
 	DWORD healthFirstAddress = gameBaseAddress + 0x0567AB8C;
 	DWORD healthSecondAddress = gameBaseAddress + 0x008235F8;
-	char healthFirstOffset[] = { 0x0, 0x168, 0x8, 0x4, 0x0, 0x98 }; //I'm goinig to use this... in the future
-	char healthSecondOffset[] = { 0xC };
 	unsigned int healthFirstFinalAddress, healthSecondFinalAddress;
 	int healthMax = 8000;
 	void* healthMemAddressOri = 0;
@@ -101,6 +99,36 @@ DWORD WINAPI main(PVOID ini)
 	void* infJumpScriptAddressOri = 0;
 	int statusInfJumpCheat = 0;
 
+	//Max All Items
+
+	int maxValueItem = 99;
+	int maxValueBullet = 20;
+
+		/* Lollipops */
+
+	int bigGreen = gameBaseAddress + 0x000970C8; int bigRose = gameBaseAddress + 0x000970C8;
+	int bigYellow = gameBaseAddress + 0x000970C8; int bigPurple = gameBaseAddress + 0x000970C8;
+	int smallGreen = gameBaseAddress + 0x00747810; int smallRose = gameBaseAddress + 0x00747810;
+	int smallYellow = gameBaseAddress + 0x00747810; int smallPurple = gameBaseAddress + 0x00747810;
+	int bigGreenAddress, bigRoseAddress, bigYellowAddress, bigPurpleAddress;
+	int smallGreenAddress, smallRoseAddress, smallYellowAddress, smallPurpleAddress;
+
+		/* Compounds */
+
+	int compGreen = gameBaseAddress + 0x000970C8;
+	int compRose = gameBaseAddress + 0x000970C8;
+	int compYellow = gameBaseAddress + 0x000970C8;
+	int compGreenAddress, compRoseAddress, compYellowAddress;
+
+		/* Other items */
+
+	int magicFlute = gameBaseAddress + 0x000970C8;
+	int redHot = gameBaseAddress + 0x000970C8;
+	int bullet = gameBaseAddress + 0x000970C8;
+	int magicFluteAddress, redHotAddress, bulletAddress;
+
+	/*	NOTHING  */
+
 	//--------------------------------------------------------------------------------
 
 
@@ -127,12 +155,35 @@ DWORD WINAPI main(PVOID ini)
 
 	ReadProcessMemory(p, LPVOID(healthSecondAddress), &temp, sizeof(temp), nullptr);
 
-	healthSecondFinalAddress = temp + healthSecondOffset[0];
+	healthSecondFinalAddress = temp + 0xC;
 
 	//Magic
 
 	ReadProcessMemory(p, LPVOID(magicAddress), &temp, sizeof(temp), nullptr);
 	magicFinalAddress = temp + magicOffset[0];
+
+	//Items
+
+		/* Lollipops */
+
+	bigGreenAddress = read(p, bigGreen) + 0x1C;		smallGreenAddress = read(p, smallGreen) + 0xC;
+	bigRoseAddress = read(p, bigRose) + 0x2C;		smallRoseAddress = read(p, smallRose) + 0x1C;
+	bigYellowAddress = read(p, bigYellow) + 0x34;	smallYellowAddress = read(p, smallYellow) + 0x24;
+	bigPurpleAddress = read(p, bigPurple) + 0x24;	smallPurpleAddress = read(p, smallPurple) + 0x14;
+
+		/* Compounds */
+
+	compGreenAddress = read(p, compGreen) + 0x10;
+	compRoseAddress = read(p, compRose) + 0x14;
+	compYellowAddress = read(p, compYellow) + 0xC;
+
+		/* Other items */
+
+	magicFluteAddress = read(p, magicFlute) + 0x38;
+	redHotAddress = read(p, redHot) + 0x40;
+	bulletAddress = read(p, bullet) + 0x3C;
+
+	/*  Again  */
 
 	//--------------------------------------------------------------------------------
 
@@ -229,8 +280,8 @@ DWORD WINAPI main(PVOID ini)
 
 				//Write the max health
 
-				WriteProcessMemory(p, LPVOID(healthFirstFinalAddress), &healthMax, sizeof(healthMax), nullptr);
-				WriteProcessMemory(p, LPVOID(healthSecondFinalAddress), &healthMax, sizeof(healthMax), nullptr);
+				//WriteProcessMemory(p, LPVOID(healthFirstFinalAddress), &healthMax, sizeof(healthMax), nullptr);
+				//WriteProcessMemory(p, LPVOID(healthSecondFinalAddress), &healthMax, sizeof(healthMax), nullptr);
 
 				//Write in the allocated mem
 
@@ -550,6 +601,38 @@ DWORD WINAPI main(PVOID ini)
 				freeMemory(p, infJumpMemAddressOri, sizeof(infJumpCheat));
 
 			}
+
+		}
+
+		if (GetAsyncKeyState(VK_F8))
+		{
+
+			Beep(2000, 200);
+
+			//Write the values in memory
+
+				/* Write lollipops */
+
+			chkWItem(p, bigGreenAddress, maxValueItem);
+			chkWItem(p, bigRose, maxValueItem);
+			chkWItem(p, bigYellow, maxValueItem);
+			chkWItem(p, bigPurple, maxValueItem);
+			chkWItem(p, smallGreen, maxValueItem);
+			chkWItem(p, smallRose, maxValueItem);
+			chkWItem(p, smallYellow, maxValueItem);
+			chkWItem(p, smallPurple, maxValueItem);
+
+				/* Write Compounds */
+
+			chkWItem(p, compGreen, maxValueItem);
+			chkWItem(p, compRose, maxValueItem);
+			chkWItem(p, compYellow, maxValueItem);
+
+				/* Other items */
+
+			chkWItem(p, redHot, maxValueItem);
+			chkWItem(p, magicFlute, maxValueItem);
+			chkWItem(p, bullet, maxValueBullet);
 
 		}
 
