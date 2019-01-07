@@ -23,6 +23,8 @@ DWORD WINAPI main(PVOID ini)
 	BYTE maxTonCheat1[] = { 0xC7, 0x46, 0x2C, 0x00, 0x00, 0xC8, 0x42, 0xF3, 0x0F, 0x58, 0x46, 0x2C, 0xE9 };
 	BYTE maxTonCheat2[] = { 0xC7, 0x46, 0x74, 0x00, 0x00, 0xC8, 0x42, 0xF3, 0x0F, 0x10, 0x46, 0x74, 0xE9 };
 	BYTE infJumpCheat[] = { 0x90, 0xE9 };
+	BYTE alfLifeCheat[] = { 0x90, 0xE9 };
+	BYTE alfTimeCheat[] = { 0x90, 0xE9 };
 
 	//Actual original/patterns codes
 	BYTE goldBytes[] = { 0x29, 0x81, 0xE4, 0xF5, 0x00, 0x00 };
@@ -34,6 +36,8 @@ DWORD WINAPI main(PVOID ini)
 	BYTE maxTonBytes1[] = { 0xF3, 0x0F, 0x58, 0x46, 0x2C, 0x50 };
 	BYTE maxTonBytes2[] = { 0xF3, 0x0F, 0x10, 0x46, 0x74, 0x50 };
 	BYTE infJumpBytes[] = { 0x01, 0xAE, 0x78, 0x35, 0x09, 0x00 };
+	BYTE alfLifeBytes[] = { 0xFF, 0x8E, 0x54, 0x6B, 0x09, 0x00 };
+	BYTE alfTimeBytes[] = { 0xF3, 0x0F, 0x11, 0x46, 0x0C, 0x76 };
 
 	//Other things lol
 
@@ -128,6 +132,22 @@ DWORD WINAPI main(PVOID ini)
 	int magicFluteAddress, redHotAddress, bulletAddress;
 
 	/*	NOTHING  */
+
+	//Alfheim
+
+		/* Alfheim cheat life */
+
+	void* alfLifeMemAddressOri = 0;
+	void* alfLifeScriptAddressOri = 0;
+	int statusAlfLifeCheat = 0;
+
+		/* Alfheim cheat time */
+
+	void* alfTimeMemAddressOri = 0;
+	void* alfTimeScriptAddressOri = 0;
+	int statusAlfTimeCheat = 0;
+
+	//The end
 
 	//--------------------------------------------------------------------------------
 
@@ -633,6 +653,107 @@ DWORD WINAPI main(PVOID ini)
 			chkWItem(p, redHot, maxValueItem);
 			chkWItem(p, magicFlute, maxValueItem);
 			chkWItem(p, bullet, maxValueBullet);
+
+		}
+
+		if (GetAsyncKeyState(VK_F9))
+		{
+
+			//Allocate Memory
+
+			void* MemAddress = allocMem(p, alfLifeCheat);
+			void* MemAddressOff = static_cast<char*>(MemAddress) + sizeof(alfLifeCheat);
+
+			//Find original code
+
+			DWORD scriptalfLife = FindPattern(0x009D4000, 6000, alfLifeBytes, "xxxxxx");
+
+			//Calculate jmp
+
+			void* jmpToCheat = calJmp(MemAddress, scriptalfLife, 1, NULL);
+			void* jmpOfReturn = calJmp(static_cast<char*>(MemAddress) + 0x2, scriptalfLife, 0, sizeof(alfLifeBytes));
+
+			if (statusAlfLifeCheat == 0)
+			{
+
+				//Sucks
+
+				Beep(2000, 200);
+				statusAlfLifeCheat = 1;
+				alfLifeMemAddressOri = MemAddress;
+				alfLifeScriptAddressOri = reinterpret_cast<void*>(scriptalfLife);
+
+				//Write in allocated memory
+
+				WriteProcessMemory(p, LPVOID(MemAddress), &alfLifeCheat, sizeof(alfLifeCheat), nullptr);
+				WriteProcessMemory(p, LPVOID(MemAddressOff), &jmpOfReturn, sizeof(jmpOfReturn), nullptr);
+
+				//Again caves
+
+				WriteProcessMemory(p, LPVOID(scriptalfLife), &jmpInstruction, sizeof(jmpInstruction), nullptr);
+				WriteProcessMemory(p, LPVOID(scriptalfLife+0x1), &jmpToCheat, sizeof(jmpToCheat), nullptr);
+				putNopes(p, scriptalfLife, 1);
+
+
+			}
+			else {
+				
+				Beep(1000, 200);
+				statusAlfLifeCheat = 0;
+				WriteProcessMemory(p, LPVOID(alfLifeScriptAddressOri), &alfLifeBytes, sizeof(alfLifeBytes), nullptr);
+				freeMemory(p, alfLifeMemAddressOri, sizeof(alfLifeCheat));
+
+			}
+
+		}
+
+		if (GetAsyncKeyState(VK_F10))
+		{
+
+			//Allocate Memory
+
+			void* MemAddress = allocMem(p, alfTimeCheat);
+			void* MemAddressOff = static_cast<char*>(MemAddress) + sizeof(alfTimeCheat);
+
+			//Find original code
+
+			DWORD scriptalfTime = FindPattern(0x00620000, 6000, alfTimeBytes, "xxxxxx");
+
+			//Calculate jmp
+
+			void* jmpToCheat = calJmp(MemAddress, scriptalfTime, 1, NULL);
+			void* jmpOfReturn = calJmp(static_cast<char*>(MemAddress) + 0x2, scriptalfTime, 0, sizeof(alfTimeBytes));
+
+			if (statusAlfTimeCheat == 0)
+			{
+
+				//Sucks
+
+				Beep(2000, 200);
+				statusAlfTimeCheat = 1;
+				alfTimeMemAddressOri = MemAddress;
+				alfTimeScriptAddressOri = reinterpret_cast<void*>(scriptalfTime);
+
+				//Write in allocated memory
+
+				WriteProcessMemory(p, LPVOID(MemAddress), &alfTimeCheat, sizeof(alfTimeCheat), nullptr);
+				WriteProcessMemory(p, LPVOID(MemAddressOff), &jmpOfReturn, sizeof(jmpOfReturn), nullptr);
+
+				//Again caves 2
+
+				WriteProcessMemory(p, LPVOID(scriptalfTime), &jmpInstruction, sizeof(jmpInstruction), nullptr);
+				WriteProcessMemory(p, LPVOID(scriptalfTime + 0x1), &jmpToCheat, sizeof(jmpToCheat), nullptr);
+
+
+			}
+			else {
+
+				Beep(1000, 200);
+				statusAlfTimeCheat = 0;
+				WriteProcessMemory(p, LPVOID(alfTimeScriptAddressOri), &alfTimeBytes, sizeof(alfTimeBytes), nullptr);
+				freeMemory(p, alfTimeMemAddressOri, sizeof(alfTimeCheat));
+
+			}
 
 		}
 
