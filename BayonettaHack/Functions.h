@@ -103,3 +103,29 @@ void freeMemory(HANDLE p, void* address, size_t cheatSize)
 	VirtualFreeEx(p, address, (cheatSize + 0x5), MEM_DECOMMIT);
 
 }
+
+unsigned int read(HANDLE p, int address)
+{
+
+	unsigned int finalAddress;
+	ReadProcessMemory(p, LPVOID(address), &finalAddress, sizeof(finalAddress), nullptr);
+
+	return finalAddress;
+	
+}
+
+void chkWItem(HANDLE p, int address, int value)// Check and Write Items - > chk W Item
+{
+
+	int temp;
+
+	ReadProcessMemory(p, LPVOID(address), &temp, sizeof(temp), nullptr);
+
+	if (!temp == 0)
+	{
+
+		WriteProcessMemory(p, LPVOID(address), &value, sizeof(value), nullptr);
+
+	}
+
+}
