@@ -11,7 +11,7 @@ Just inject the dll and use the functions keys to active the cheats.
 
 F1 ~ Unlimited Gold
 
-F2 ~ Unlimited Health (Deactivated. Reason: Bugs)
+F2 ~ Unlimited Health
 
 F3 ~ Unlimited Witch Time 
 
@@ -35,5 +35,6 @@ F12 ~ -_-*.*-_-
 
 P.S: Now you can deactivate the cheats, just press the function key again.
 
-Almost all cheats working perfectly, the hp cheat is going to be in maintance for a while.
-Now I just need to work in the bug of health cheat and make a damn message appears on the screen, this beep-beep sound is sickining my ears
+All cheats working perfectly.
+
+Now I just need to work for a message appears on the screen, this beep-beep sound is sickining my ears
