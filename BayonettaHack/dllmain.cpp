@@ -15,7 +15,7 @@ DWORD WINAPI main(PVOID ini)
 	BYTE jmpInstruction[] = { 0xE9 };
 	BYTE nopInstruction[] = { 0x90 };
 	BYTE haloCheat[] = { 0x90, 0xE9 }; 
-	//BYTE healthCheat[] = { 0x90, 0xE9 }; Maintance
+	BYTE healthCheat[] = { 0x90, 0xE9 };
 	BYTE witchTimeCheat[] = { 0xC7, 0x86, 0x5C, 0x5D, 0x09, 0x00, 0x00, 0x00, 0xC8, 0x42, 0xF3, 0x0F, 0x10, 0x96, 0x5C, 0x5D, 0x09, 0x00, 0xE9 };
 	BYTE magicCheat1[] = { 0x90, 0xE9 };
 	BYTE magicCheat2[] = { 0x90, 0xE9 };
@@ -28,7 +28,7 @@ DWORD WINAPI main(PVOID ini)
 
 	//Actual original/patterns codes
 	BYTE goldBytes[] = { 0x29, 0x81, 0xE4, 0xF5, 0x00, 0x00 };
-	//BYTE healthBytes[] = { 0x89, 0x86, 0x08, 0x35, 0x09, 0x00 }; Maintance
+	BYTE healthBytes[] = { 0x89, 0x86, 0x08, 0x35, 0x09, 0x00, 0x85 };
 	BYTE witchTimeBytes[] = { 0xF3, 0x0F, 0x10, 0x96, 0x5C, 0x5D, 0x09, 0x00 };
 	BYTE magicBytes1[] = { 0xF3, 0x0F, 0x5C, 0x05, 0xDC, 0x0D, 0xDA, 0x00 };
 	BYTE magicBytes2[] = { 0xF3, 0x0F, 0x5C, 0x05, 0x58, 0x4B, 0xDA, 0x00, 0x0F, 0x57, 0xC9, 0x0F, 0x2F, 0xC8, 0xF3, 0x0F, 0x11, 0x05 };
@@ -60,9 +60,7 @@ DWORD WINAPI main(PVOID ini)
 	void* haloMemAddressOri = 0;
 	void* haloScriptAddressOri = 0;
 	int statusHaloCheat = 0;
-	
-	/* Maintance
-	
+
 	//Health
 	DWORD healthFirstAddress = gameBaseAddress + 0x0567AB8C;
 	DWORD healthSecondAddress = gameBaseAddress + 0x008235F8;
@@ -71,8 +69,6 @@ DWORD WINAPI main(PVOID ini)
 	void* healthMemAddressOri = 0;
 	void* healthScriptAddressOri = 0;
 	int statusHealthCheat = 0;
-	
-	*/
 
 	//Witch Time
 	void* witchTimeAddressOri = 0;
@@ -162,8 +158,6 @@ DWORD WINAPI main(PVOID ini)
 	ReadProcessMemory(p, LPVOID(haloAddress), &temp, sizeof(temp), nullptr);
 	haloFinalAddress = haloOffset + temp;
 
-	/* Maintance
-	
 	//Health
 
 						//Get the first pointer to health//
@@ -182,8 +176,6 @@ DWORD WINAPI main(PVOID ini)
 	ReadProcessMemory(p, LPVOID(healthSecondAddress), &temp, sizeof(temp), nullptr);
 
 	healthSecondFinalAddress = temp + 0xC;
-	
-	*/
 
 	//Magic
 
@@ -278,8 +270,6 @@ DWORD WINAPI main(PVOID ini)
 			}
 
 		}
-		
-		/* Maintance
 
 		if (GetAsyncKeyState(VK_F2))
 		{
@@ -291,12 +281,12 @@ DWORD WINAPI main(PVOID ini)
 
 			//Find the address of original code
 
-			DWORD scriptHealth = FindPattern(0x009D4000, 6000, healthBytes, "xxxxxx");
+			DWORD scriptHealth = FindPattern(0x009D4000, 6000, healthBytes, "xxxxxxx");
 
 			//Calculate the jmp bytes
 
 			void* jmpToCheat = calJmp(MemAddress, scriptHealth, 1, NULL);
-			void* jmpOfReturn = calJmp(MemAddress, scriptHealth, 0, sizeof(healthCheat));
+			void* jmpOfReturn = calJmp(static_cast<char*>(MemAddress) - 0x2, scriptHealth, 0, sizeof(healthCheat));
 
 			if (statusHealthCheat == 0)
 			{
@@ -338,8 +328,6 @@ DWORD WINAPI main(PVOID ini)
 			}
 
 		}
-		
-		*/
 
 		if (GetAsyncKeyState(VK_F3))
 		{
@@ -646,25 +634,25 @@ DWORD WINAPI main(PVOID ini)
 				/* Write lollipops */
 
 			chkWItem(p, bigGreenAddress, maxValueItem);
-			chkWItem(p, bigRose, maxValueItem);
-			chkWItem(p, bigYellow, maxValueItem);
-			chkWItem(p, bigPurple, maxValueItem);
-			chkWItem(p, smallGreen, maxValueItem);
-			chkWItem(p, smallRose, maxValueItem);
-			chkWItem(p, smallYellow, maxValueItem);
-			chkWItem(p, smallPurple, maxValueItem);
+			chkWItem(p, bigRoseAddress, maxValueItem);
+			chkWItem(p, bigYellowAddress, maxValueItem);
+			chkWItem(p, bigPurpleAddress, maxValueItem);
+			chkWItem(p, smallGreenAddress, maxValueItem);
+			chkWItem(p, smallRoseAddress, maxValueItem);
+			chkWItem(p, smallYellowAddress, maxValueItem);
+			chkWItem(p, smallPurpleAddress, maxValueItem);
 
 				/* Write Compounds */
 
-			chkWItem(p, compGreen, maxValueItem);
-			chkWItem(p, compRose, maxValueItem);
-			chkWItem(p, compYellow, maxValueItem);
+			chkWItem(p, compGreenAddress, maxValueItem);
+			chkWItem(p, compRoseAddress, maxValueItem);
+			chkWItem(p, compYellowAddress, maxValueItem);
 
 				/* Other items */
 
-			chkWItem(p, redHot, maxValueItem);
-			chkWItem(p, magicFlute, maxValueItem);
-			chkWItem(p, bullet, maxValueBullet);
+			chkWItem(p, redHotAddress, maxValueItem);
+			chkWItem(p, magicFluteAddress, maxValueItem);
+			chkWItem(p, bulletAddress, maxValueBullet);
 
 		}
 
