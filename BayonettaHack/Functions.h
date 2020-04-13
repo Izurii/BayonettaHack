@@ -6,8 +6,6 @@
 #include <TlHelp32.h>
 using namespace std;
 
-//Test webhook
-
 void* allocMem(HANDLE p, BYTE cheat[]) //Allocate memory for codecave
 {
 
