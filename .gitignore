@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+BayonettaHack/BayonettaHack.vcxproj.user
+.vs/
+*.PTR
+*.PTR.*
