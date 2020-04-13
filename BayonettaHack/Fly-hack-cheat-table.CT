@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="29">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>137</ID>
+      <Description>"No description"</Description>
+      <VariableType>Float</VariableType>
+      <Address>53B3C114</Address>
+      <Hotkeys>
+        <Hotkey>
+          <Action>Increase Value</Action>
+          <Keys>
+            <Key>16</Key>
+            <Key>116</Key>
+          </Keys>
+          <Value>1</Value>
+          <ID>0</ID>
+        </Hotkey>
+        <Hotkey>
+          <Action>Decrease Value</Action>
+          <Keys>
+            <Key>16</Key>
+            <Key>117</Key>
+          </Keys>
+          <Value>1</Value>
+          <ID>1</ID>
+        </Hotkey>
+      </Hotkeys>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>79</ID>
+      <Description>"Gravity"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>{ Game   : Bayonetta.exe
+  Version: 
+  Date   : 2020-04-13
+  Author : IZURII
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+
+aobscanmodule(INJECT,Bayonetta.exe,C0 F3 0F 11 A6 D0 00 00 00 F3 0F 11 8E D4 00 00 00) // should be unique
+alloc(newmem,$1000)
+
+label(code)
+label(return)
+
+newmem:
+
+code:
+  //mov [esi+000000D4],0F
+  jmp return
+
+INJECT+09:
+  jmp newmem
+  nop 3
+return:
+registersymbol(INJECT)
+
+[DISABLE]
+
+INJECT+09:
+  db F3 0F 11 8E D4 00 00 00
+
+unregistersymbol(INJECT)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: "Bayonetta.exe"+5CE6A7
+
+"Bayonetta.exe"+5CE66C: F3 0F 59 CC                    -  mulss xmm1,xmm4
+"Bayonetta.exe"+5CE670: F3 0F 58 8E D4 00 00 00        -  addss xmm1,[esi+000000D4]
+"Bayonetta.exe"+5CE678: F3 0F 59 D4                    -  mulss xmm2,xmm4
+"Bayonetta.exe"+5CE67C: F3 0F 58 96 D8 00 00 00        -  addss xmm2,[esi+000000D8]
+"Bayonetta.exe"+5CE684: F3 0F 59 DC                    -  mulss xmm3,xmm4
+"Bayonetta.exe"+5CE688: F3 0F 10 A6 D0 00 00 00        -  movss xmm4,[esi+000000D0]
+"Bayonetta.exe"+5CE690: F3 0F 58 9E DC 00 00 00        -  addss xmm3,[esi+000000DC]
+"Bayonetta.exe"+5CE698: F3 0F 58 E0                    -  addss xmm4,xmm0
+"Bayonetta.exe"+5CE69C: 0F 57 C0                       -  xorps xmm0,xmm0
+"Bayonetta.exe"+5CE69F: F3 0F 11 A6 D0 00 00 00        -  movss [esi+000000D0],xmm4
+// ---------- INJECTING HERE ----------
+"Bayonetta.exe"+5CE6A7: F3 0F 11 8E D4 00 00 00        -  movss [esi+000000D4],xmm1
+// ---------- DONE INJECTING  ----------
+"Bayonetta.exe"+5CE6AF: F3 0F 11 96 D8 00 00 00        -  movss [esi+000000D8],xmm2
+"Bayonetta.exe"+5CE6B7: F3 0F 11 9E DC 00 00 00        -  movss [esi+000000DC],xmm3
+"Bayonetta.exe"+5CE6BF: C7 86 3C 36 09 00 00 00 00 00  -  mov [esi+0009363C],00000000
+"Bayonetta.exe"+5CE6C9: F3 0F 11 86 40 36 09 00        -  movss [esi+00093640],xmm0
+"Bayonetta.exe"+5CE6D1: 5F                             -  pop edi
+"Bayonetta.exe"+5CE6D2: 5E                             -  pop esi
+"Bayonetta.exe"+5CE6D3: 8B E5                          -  mov esp,ebp
+"Bayonetta.exe"+5CE6D5: 5D                             -  pop ebp
+"Bayonetta.exe"+5CE6D6: C3                             -  ret 
+"Bayonetta.exe"+5CE6D7: CC                             -  int 3 
+}
+</AssemblerScript>
+    </CheatEntry>
+  </CheatEntries>
+  <UserdefinedSymbols/>
+  <LuaScript>PROCESS_NAME = 'Bayonetta.exe'
+--------
+-------- Auto Attach
+--------
+local autoAttachTimer = nil ---- variable to hold timer object
+local autoAttachTimerInterval = 1000 ---- Timer intervals are in milliseconds
+local autoAttachTimerTicks = 0 ---- variable to count number of times the timer has run
+local autoAttachTimerTickMax = 5000 ---- Set to zero to disable ticks max
+local function autoAttachTimer_tick(timer) ---- Timer tick call back
+        ---- Destroy timer if max ticks is reached
+	if autoAttachTimerTickMax &gt; 0 and autoAttachTimerTicks &gt;= autoAttachTimerTickMax then
+		timer.destroy()
+	end
+        ---- Check if process is running
+	if getProcessIDFromProcessName(PROCESS_NAME) ~= nil then
+		timer.destroy() ---- Destroy timer
+		openProcess(PROCESS_NAME) ---- Open the process
+	end
+	autoAttachTimerTicks = autoAttachTimerTicks + 1 ---- Increase ticks
+end
+autoAttachTimer = createTimer(getMainForm()) ---- Create timer with the main form as it's parent
+autoAttachTimer.Interval = autoAttachTimerInterval ---- Set timer interval
+autoAttachTimer.OnTimer = autoAttachTimer_tick ---- Set timer tick call back
+</LuaScript>
+</CheatTable>
