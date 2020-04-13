@@ -29,7 +29,7 @@ F9 ~ Infinite Alfheim Life
 
 F10 ~ Unlimited Alfheim Time
 
-F11 ~ *.*-_-*.*
+F11 ~ (Making a fly hack)
 
 F12 ~ -_-*.*-_-
 
