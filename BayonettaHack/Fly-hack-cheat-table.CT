@@ -2,32 +2,6 @@
 <CheatTable CheatEngineTableVersion="29">
   <CheatEntries>
     <CheatEntry>
-      <ID>137</ID>
-      <Description>"No description"</Description>
-      <VariableType>Float</VariableType>
-      <Address>53B3C114</Address>
-      <Hotkeys>
-        <Hotkey>
-          <Action>Increase Value</Action>
-          <Keys>
-            <Key>16</Key>
-            <Key>116</Key>
-          </Keys>
-          <Value>1</Value>
-          <ID>0</ID>
-        </Hotkey>
-        <Hotkey>
-          <Action>Decrease Value</Action>
-          <Keys>
-            <Key>16</Key>
-            <Key>117</Key>
-          </Keys>
-          <Value>1</Value>
-          <ID>1</ID>
-        </Hotkey>
-      </Hotkeys>
-    </CheatEntry>
-    <CheatEntry>
       <ID>79</ID>
       <Description>"Gravity"</Description>
       <LastState Activated="1"/>
@@ -96,6 +70,39 @@ dealloc(newmem)
 "Bayonetta.exe"+5CE6D7: CC                             -  int 3 
 }
 </AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>138</ID>
+      <Description>"Player Y"</Description>
+      <VariableType>Float</VariableType>
+      <Address>"Bayonetta.exe"+04C9E820</Address>
+      <Offsets>
+        <Offset>C4</Offset>
+        <Offset>774</Offset>
+        <Offset>0</Offset>
+        <Offset>20</Offset>
+        <Offset>28</Offset>
+        <Offset>20</Offset>
+        <Offset>20</Offset>
+      </Offsets>
+      <Hotkeys>
+        <Hotkey>
+          <Action>Increase Value</Action>
+          <Keys>
+            <Key>113</Key>
+          </Keys>
+          <Value>1</Value>
+          <ID>0</ID>
+        </Hotkey>
+        <Hotkey>
+          <Action>Decrease Value</Action>
+          <Keys>
+            <Key>114</Key>
+          </Keys>
+          <Value>1</Value>
+          <ID>1</ID>
+        </Hotkey>
+      </Hotkeys>
     </CheatEntry>
   </CheatEntries>
   <UserdefinedSymbols/>
