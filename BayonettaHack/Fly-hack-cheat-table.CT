@@ -72,37 +72,145 @@ dealloc(newmem)
 </AssemblerScript>
     </CheatEntry>
     <CheatEntry>
-      <ID>138</ID>
-      <Description>"Player Y"</Description>
-      <VariableType>Float</VariableType>
-      <Address>"Bayonetta.exe"+04C9E820</Address>
-      <Offsets>
-        <Offset>C4</Offset>
-        <Offset>774</Offset>
-        <Offset>0</Offset>
-        <Offset>20</Offset>
-        <Offset>28</Offset>
-        <Offset>20</Offset>
-        <Offset>20</Offset>
-      </Offsets>
-      <Hotkeys>
-        <Hotkey>
-          <Action>Increase Value</Action>
-          <Keys>
-            <Key>113</Key>
-          </Keys>
-          <Value>1</Value>
-          <ID>0</ID>
-        </Hotkey>
-        <Hotkey>
-          <Action>Decrease Value</Action>
-          <Keys>
-            <Key>114</Key>
-          </Keys>
-          <Value>1</Value>
-          <ID>1</ID>
-        </Hotkey>
-      </Hotkeys>
+      <ID>187</ID>
+      <Description>"Fall Down System"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>{ Game   : Bayonetta.exe
+  Version: 
+  Date   : 2020-04-14
+  Author : IZURII
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+
+aobscanmodule(INJECT,Bayonetta.exe,F3 0F 11 8E DC 5B 09 00 83) // should be unique
+alloc(newmem,$1000)
+
+label(code)
+label(return)
+
+newmem:
+
+code:
+  //movss [esi+00095BDC],xmm1
+  jmp return
+
+INJECT:
+  jmp newmem
+  nop 3
+return:
+registersymbol(INJECT)
+
+[DISABLE]
+
+INJECT:
+  db F3 0F 11 8E DC 5B 09 00
+
+unregistersymbol(INJECT)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: "Bayonetta.exe"+5CE4E1
+
+"Bayonetta.exe"+5CE4A1: F3 0F 59 C8              -  mulss xmm1,xmm0
+"Bayonetta.exe"+5CE4A5: F3 0F 11 8E D0 5B 09 00  -  movss [esi+00095BD0],xmm1
+"Bayonetta.exe"+5CE4AD: F3 0F 10 8E D4 5B 09 00  -  movss xmm1,[esi+00095BD4]
+"Bayonetta.exe"+5CE4B5: F3 0F 59 C8              -  mulss xmm1,xmm0
+"Bayonetta.exe"+5CE4B9: F3 0F 11 8E D4 5B 09 00  -  movss [esi+00095BD4],xmm1
+"Bayonetta.exe"+5CE4C1: F3 0F 10 8E D8 5B 09 00  -  movss xmm1,[esi+00095BD8]
+"Bayonetta.exe"+5CE4C9: F3 0F 59 C8              -  mulss xmm1,xmm0
+"Bayonetta.exe"+5CE4CD: F3 0F 11 8E D8 5B 09 00  -  movss [esi+00095BD8],xmm1
+"Bayonetta.exe"+5CE4D5: F3 0F 10 8E DC 5B 09 00  -  movss xmm1,[esi+00095BDC]
+"Bayonetta.exe"+5CE4DD: F3 0F 59 C8              -  mulss xmm1,xmm0
+// ---------- INJECTING HERE ----------
+"Bayonetta.exe"+5CE4E1: F3 0F 11 8E DC 5B 09 00  -  movss [esi+00095BDC],xmm1
+// ---------- DONE INJECTING  ----------
+"Bayonetta.exe"+5CE4E9: 83 BE 24 6B 09 00 03     -  cmp dword ptr [esi+00096B24],03
+"Bayonetta.exe"+5CE4F0: 0F 84 CD 00 00 00        -  je Bayonetta.exe+5CE5C3
+"Bayonetta.exe"+5CE4F6: 83 BE C0 5F 09 00 00     -  cmp dword ptr [esi+00095FC0],00
+"Bayonetta.exe"+5CE4FD: F3 0F 10 8E 64 47 09 00  -  movss xmm1,[esi+00094764]
+"Bayonetta.exe"+5CE505: 74 1D                    -  je Bayonetta.exe+5CE524
+"Bayonetta.exe"+5CE507: F3 0F 10 86 80 47 09 00  -  movss xmm0,[esi+00094780]
+"Bayonetta.exe"+5CE50F: F3 0F 59 86 CC 06 00 00  -  mulss xmm0,[esi+000006CC]
+"Bayonetta.exe"+5CE517: F3 0F 59 05 E8 11 DA 00  -  mulss xmm0,[Bayonetta.exe+9A11E8]
+"Bayonetta.exe"+5CE51F: E9 93 00 00 00           -  jmp Bayonetta.exe+5CE5B7
+"Bayonetta.exe"+5CE524: 83 BE 3C 36 09 00 00     -  cmp dword ptr [esi+0009363C],00
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>193</ID>
+      <Description>"Player Pos"</Description>
+      <Options moManualExpandCollapse="1" moAllowManualCollapseAndExpand="1"/>
+      <LastState Value="" RealAddress="00000000"/>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>194</ID>
+          <Description>"Player X"</Description>
+          <VariableType>Float</VariableType>
+          <Address>"Bayonetta.exe"+04C9E830</Address>
+          <Offsets>
+            <Offset>D8</Offset>
+            <Offset>664</Offset>
+            <Offset>1FC</Offset>
+            <Offset>1C</Offset>
+            <Offset>1D4</Offset>
+            <Offset>31C</Offset>
+            <Offset>0</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>138</ID>
+          <Description>"Player Y"</Description>
+          <VariableType>Float</VariableType>
+          <Address>"Bayonetta.exe"+04C9E820</Address>
+          <Offsets>
+            <Offset>C4</Offset>
+            <Offset>774</Offset>
+            <Offset>0</Offset>
+            <Offset>20</Offset>
+            <Offset>28</Offset>
+            <Offset>20</Offset>
+            <Offset>20</Offset>
+          </Offsets>
+          <Hotkeys>
+            <Hotkey>
+              <Action>Increase Value</Action>
+              <Keys>
+                <Key>113</Key>
+              </Keys>
+              <Value>1</Value>
+              <ID>0</ID>
+            </Hotkey>
+            <Hotkey>
+              <Action>Decrease Value</Action>
+              <Keys>
+                <Key>114</Key>
+              </Keys>
+              <Value>1</Value>
+              <ID>1</ID>
+            </Hotkey>
+          </Hotkeys>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>192</ID>
+          <Description>"Player Z"</Description>
+          <VariableType>Float</VariableType>
+          <Address>"Bayonetta.exe"+04C9E820</Address>
+          <Offsets>
+            <Offset>C0</Offset>
+            <Offset>BC</Offset>
+            <Offset>0</Offset>
+            <Offset>4</Offset>
+            <Offset>4</Offset>
+            <Offset>4</Offset>
+          </Offsets>
+        </CheatEntry>
+      </CheatEntries>
     </CheatEntry>
   </CheatEntries>
   <UserdefinedSymbols/>
